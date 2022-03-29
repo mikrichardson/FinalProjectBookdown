@@ -5,5 +5,7 @@ date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---
 
-# Final Project Bookdown
+# Final Project Description
+
+The final project for the ESS 580A7 requires the creation a bookdown, highlighting the assignments completed through out the course.
 
