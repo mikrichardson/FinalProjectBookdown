@@ -7,5 +7,5 @@ site: bookdown::bookdown_site
 
 # Final Project Description
 
-The final project for the ESS 580A7 requires the creation a bookdown, highlighting the assignments completed through out the course.
+The final project for the ESS 580A7 requires the creation a bookdown, highlighting the assignments completed and topics learned throughout the course. It focuses on 5 assignments completed throughout the 8-week course, splitting the Lagos Spatial Analysis assignment into two separate chapters. Topics covered include developing websites via GitHub, project workflow and organization, data wrangling and webscraping, iterations, functions, spatial operations and analysis, and linear and quadratic regressions. For the assignments, all personal code is listed under the section, "Assignment", and anything above is code provided by Matt Ross or Nathan Mueller. The GitHub Assignment is the exception as code was manipulated throughout the whole document as part of the assignment.
 

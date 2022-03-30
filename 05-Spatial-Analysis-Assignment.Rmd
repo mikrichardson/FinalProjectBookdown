@@ -1,10 +1,3 @@
----
-title: "Lake Water Quality Analysis"
-author: "Mikaela Richardson"
-date: "2/24/2022"
-output: html_document
----
-
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
@@ -17,9 +10,9 @@ library(USAboundaries) #USA states and counties
 library(lubridate) #For dealing with date and time
 ```
 
-
 # LAGOS Analysis Part 2
 
+The second part of the spatial analysis assignment is utilizing the Lagos data to spatially analyze and observe chlorophyll and secchi data.
 
 ## Loading in data
 
@@ -117,13 +110,13 @@ mapview(mean_spatial,zcol='log10_mean_chl')
 ```
 
 
-# Class work
+## Assignment
 
-## 1) What is the correlation between Secchi Disk Depth and Chlorophyll a for sites with at least 200 observations?
+### Question 1. What is the correlation between Secchi Disk Depth and Chlorophyll a for sites with at least 200 observations?
 
 - Here, I just want a plot of chla vs secchi for all sites 
 
-```{r, warning = F}
+```{r, fig.cap = "Scatterplot of Chlorophyll A and Secchi disk depth for all sites. The log scale was taken for both variables to have a better understanding of the correlation between the two. There is a negative correlation between chlorophyll a and the secchi disk depth with a correlation value of -0.3774. As the visible depth of the secchi disk increases there is less chlorophyll a. With more chlorophyll a the water will be more turbid, so it would be expected that the secchi disk depth would decrease as it would more difficult to see."}
 #Sites with at least 200 observations
 chla_secchi_200 <- chla_secchi %>%
   group_by(lagoslakeid) %>%
@@ -139,13 +132,13 @@ ggplot(chla_secchi_200, aes(x=chla, y= secchi))+
   scale_y_log10()
 ```
 
-Figure 1. Scatterplot of Chlorophyll A and Secchi disk depth for all sites. The log scale was taken for both variables to have a better understanding of the correlation between the two. There is a negative correlation between chlorophyll a and the secchi disk depth with a correlation value of -0.3774. As the visible depth of the secchi disk increases there is less chlorophyll a. With more chlorophyll a the water will be more turbid, so it would be expected that the secchi disk depth would decrease as it would more difficult to see.
 
-## 2) What states have the most data? 
+
+### Question 2. What states have the most data? 
 
 Minnesota has the most data collected. 
 
-### 2a) First you will need to make a lagos spatial dataset that has the total number of counts per site.
+#### 2a. First you will need to make a lagos spatial dataset that has the total number of counts per site.
 
 ```{r}
 site_counts <- nutr %>%
@@ -158,7 +151,7 @@ spatial_counts <- inner_join(spatial_lakes, site_counts %>%
 ```
 
 
-### 2b) Second, you will need to join this point dataset to the us_boundaries data. 
+#### 2b. Second, you will need to join this point dataset to the us_boundaries data. 
 
 ```{r}
 states_lagos <- lagos$state
@@ -167,7 +160,7 @@ states_lakes <- inner_join(spatial_counts, states_lagos, by = "state_zoneid")
 ```
 
 
-### 2c) Then you will want to group by state and sum all the observations in that state and arrange that data from most to least total observations per state. 
+#### 2c. Then you will want to group by state and sum all the observations in that state and arrange that data from most to least total observations per state. 
 
 ```{r}
 sum_states <- states_lakes %>% 
@@ -181,7 +174,7 @@ head(sum_states)
 ```
 Accessed code for lines 164, 174, and 175 from the Code Help page on the class' Teams group by Matt Ross and Amanda Hastings on 2/24/2022 and for lines 155-157 from Matt Ross' Day 8 video lecture.
 
-## 3) Is there a spatial pattern in Secchi disk depth for lakes with at least 200 observations?
+### Question 3. Is there a spatial pattern in Secchi disk depth for lakes with at least 200 observations?
 
 There isn't a clear spatial pattern for mean Secchi disk depth for lakes with at least 200 observations, however, there does seem to be lower values for the Midwest and south of Boston. With more farming in the Midwest, it would be expected that there is more nutrient loading in the lakes increasing chlorophyll a concentrations and reducing the Secchi disk depth.
 

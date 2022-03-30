@@ -1,12 +1,6 @@
----
-title: "Snow Data Assignment: Web Scraping, Functions, and Iteration"
-author: "Mikaela Richardson"
-date: "2-10-2022"
-output: html_document
-
----
 
 ```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 library(rvest)
 library(tidyverse)
 library(lubridate)
@@ -15,6 +9,8 @@ library(readxl)
 ```
 
 # Snow Data Assignment 
+
+This assignment focused on webscraping, iterations and functions. Data was scraped from the Snow Studies website and for loops were used to read in the data. Analysis looked at temperatures over time for the Swamp Angel and Senator Beck Study Plots.
 
 ## Simple web scraping
 
@@ -131,7 +127,7 @@ links <- webpage %>%
 ```
 
 
-2. Download the meteorological data. Use the `download_file` and `str_split_fixed` commands to download the data and save it in your data folder. You can use a for loop or a map function. 
+### Question 2. Download the meteorological data. Use the `download_file` and `str_split_fixed` commands to download the data and save it in your data folder. You can use a for loop or a map function. 
 ```{r}
 splits <- str_split_fixed(links,'/',8)
 
@@ -149,7 +145,7 @@ file_names <- paste0('data/assignment3/',dataset)
 ```
 
 
-3. Write a custom function to read in the data and append a site column to the data. 
+### Question 3. Write a custom function to read in the data and append a site column to the data. 
 
 ```{r, message = F}
 # this code grabs the variable names from the metadata pdf file
@@ -171,7 +167,7 @@ our_forcing_reader <- function(file_names){
 }
 ```
 
-4. Use the `map` function to read in both meteorological files. Display a summary of your tibble.
+### Question 4. Use the `map` function to read in both meteorological files. Display a summary of your tibble.
 ```{r}
 forcing_data_full <- map_dfr(file_names,our_forcing_reader)
 
@@ -179,10 +175,10 @@ summary(forcing_data_full)
 ```
 
 
-5. Make a line plot of mean temp by year by site (using the `air temp [K]` variable). Is there anything suspicious in the plot? Adjust your filtering if needed.
+### Question 5. Make a line plot of mean temp by year by site (using the `air temp [K]` variable). Is there anything suspicious in the plot? Adjust your filtering if needed.
 
-The year 2003 had lower average temperatures compared to the following years which could be attributed to missing data resulting in lower averages. I decided to filter out this year so it was mroe representative.
-```{r, message = F}
+The year 2003 had lower average temperatures compared to the following years which could be attributed to missing data resulting in lower averages. I decided to filter out this year so it was more representative.
+```{r, message = F, fig.cap = "A time series of average monthly temperatures (K) at the Swamp Angel Study Plot and the Senator Beck Study Plot."}
 temp_yearly <- forcing_data_full %>%
   filter(year > 2003) %>%
   group_by(year,site) %>%
@@ -194,17 +190,16 @@ ggplot(temp_yearly,aes(x=year,y=mean_temp,color=site)) +
   ggthemes::scale_color_few() +
   labs(x="Year",
        y="Average Temperature (K)",
-       caption="Figure 1. A time series of average monthly temperatures (K) at the Swamp Angel Study Plot and the Senator Beck Study Plot.",
        color = "Site") +
   scale_color_manual(labels = c("Swamp Angel", "Senator Beck"), values = c("green", "orange")) +
   theme(legend.position = "bottom")
 ```
 
 
-6. Write a function that makes line plots of monthly average temperature at each site for a given year. Use a for loop to make these plots for 2005 to 2010. Are monthly average temperatures at the Senator Beck Study Plot ever warmer than the Swamp Angel Study Plot?
+### Question 6. Write a function that makes line plots of monthly average temperature at each site for a given year. Use a for loop to make these plots for 2005 to 2010. Are monthly average temperatures at the Senator Beck Study Plot ever warmer than the Swamp Angel Study Plot?
 Hint: https://ggplot2.tidyverse.org/reference/print.ggplot.html
 
-From the plots, it appears that the Senator Beck Study Plot is never warmer than the Swamp Angel Study Plot. The largest differences are during the summer months and the smallest occurring during the fall months.
+
 ```{r, message = F}
 lineplotter <- function(forcing_data_full,year){
   temp_monthly <- forcing_data_full %>%
@@ -229,5 +224,5 @@ for (yr in years){
   lineplotter(forcing_data_full, year)
 }
 ```
-
+Figure 2. Monthly average temperatures for 2005-2010 for Senator Beck and Swamp Angel study plots. It appears that the Senator Beck Study Plot is never warmer than the Swamp Angel Study Plot. The largest differences are during the summer months and the smallest occurring during the fall months.
 

@@ -24,20 +24,22 @@ library(ggpubr)
 
 # Hayman Fire Recovery Assignment
 
+For this assignment, we worked with data wrangling and becoming familiarized with project organization. In doing so, we analyzed data regarding vegetation recovery of the 2002 Hayman Fire.
+
 ## Reading in Data and Stacking it
 
 ```{r dataread}
 # Read in individual data files
-ndmi <- read_csv("FinalProjectBookdown/data/assignment2/hayman_ndmi.csv") %>% 
+ndmi <- read_csv("C:/Users/mikae/Documents/School/CSU/Spring_2022/Data_Science/Intro/Final Project/FinalProjectBookdown/data/assignment2/hayman_ndmi.csv") %>% 
   rename(burned=2,unburned=3) %>%
   mutate(data='ndmi')
 
 
-ndsi <- read_csv("FinalProjectBookdown/data/assignment2/hayman_ndsi.csv") %>% 
+ndsi <- read_csv("C:/Users/mikae/Documents/School/CSU/Spring_2022/Data_Science/Intro/Final Project/FinalProjectBookdown/data/assignment2/hayman_ndsi.csv") %>% 
   rename(burned=2,unburned=3) %>%
   mutate(data='ndsi')
 
-ndvi <- read_csv("FinalProjectBookdown/data/assignment2/hayman_ndvi.csv")%>% 
+ndvi <- read_csv("C:/Users/mikae/Documents/School/CSU/Spring_2022/Data_Science/Intro/Final Project/FinalProjectBookdown/data/assignment2/hayman_ndvi.csv")%>% 
   rename(burned=2,unburned=3) %>%
   mutate(data='ndvi')
 
@@ -49,17 +51,17 @@ full_long <- rbind(ndvi,ndmi,ndsi) %>%
 
 ```
 
+## Assignment
 
-## Question 1 
+### Question 1 
 
 What is the correlation between NDVI and NDMI? - here I want you to
 convert the full_long dataset in to a wide dataset using the 
 function "spread" and then make a plot that shows the correlation as a
 function of if the site was burned or not (x axis should be ndmi)
 You should exclude winter months and focus on summer months
-
-There is a positive correlation between NDVI and NDMI with a value of 0.96. As moisture index increases so does vegetation index. In general, the plot indicates that for unburned sites the majority of them have high NDVI values as compared to the burned sites. For both types of sites, the plots indicate positive relationships. 
-```{r, message=F}
+ 
+```{r, message=F, fig.cap = "Scatterplot of NDVI versus NDMI for the Hayman Fire burn scar. There is a positive correlation between NDVI and NDMI with a value of 0.96. As moisture index increases so does vegetation index. In general, the plot indicates that for unburned sites the majority of them have high NDVI values as compared to the burned sites. For both types of sites, the plots indicate positive relationships."}
 # converting long data to wide
 full_wide <- spread(data=full_long,key='data',value='value') %>%
   filter_if(is.numeric,all_vars(!is.na(.))) %>%
@@ -81,16 +83,15 @@ cor(summer_only$ndmi, summer_only$ndvi)
 ```
 
 
-## Question 2 
+### Question 2 
 
 2) What is the correlation between average NDSI (normalized
  snow index) for January - April and average NDVI for June-August?
 In other words, does the previous year's snow cover influence vegetation
  growth for the following summer?
 
-Based on the correlation value of 0.18 there is a positive relationship meaning the previous year's snow cover does influence vegetation growth for the following summer. However, based on the low value it does not indicate a strong correlation between the two as compared to NDVI and NDMI in Question 1. 
 
-```{r, message=F}
+```{r, message=F, fig.cap = "Average NDSI for January - April versus average NDVI for June - August in the Hayman Fire burn scar. Based on the correlation value of 0.18 there is a positive relationship meaning the previous year's snow cover does influence vegetation growth for the following summer. However, based on the low value it does not indicate a strong correlation between the two as compared to NDVI and NDMI in Question 1."}
 # summarizing the data by year
 ndvi_annual <- full_wide[c("DateTime", "ndvi", "month", "year", "site")] %>%
   filter(month %in% c(6,7,8)) %>%
@@ -115,17 +116,10 @@ ggplot(combined,aes(x=ndsi_annual,y=ndvi_annual,color=site)) +
 ```
 
 
-## Q3
+### Question 3
 
 How is the snow effect from question 2 different between pre- and post-burn
 and burned and unburned? 
-
-Pre-burned correlation: 0.091
-Post-burned correlation:0.24
-Burned sites correlation: 0.087
-Unburned sites correlation: -0.031
-
-There are positive correlations for NDVI and NDSI between pre- and post-burn dates and burned sites, and a negative correlation for unburned sites. Based on the correlation values and plots, the correlations are not noticeably strong.
 
 ```{r, message=F}
 #pre burned correlation
@@ -206,7 +200,7 @@ c <- ggplot(combined_burned,aes(x=ndsi_burn,y=ndvi_burn)) +
   labs(y="NDVI", x="NDSI", title = "c. Burned sites")
 ```
 
-```{r, message=F}
+```{r, message=F, fig.cap = "a. NDVI vs. NDSI in pre-burned areas. b. NVDI vs. NDSI for post-burned areas. c. NDVI vs. NDSI for all burned sites. d. NDVI vs. NDSI for all unburned sites."}
 #unburned sites correlation
 ndvi_unburned <- full_wide[c("DateTime", "ndvi", "month", "year", "site")] %>%
   filter(month %in% c(6,7,8)) %>%
@@ -232,30 +226,18 @@ d <- ggplot(combined_unburned,aes(x=ndsi_unburned,y=ndvi_unburned)) +
 
 ggarrange(a,b,c,d, nrow = 2, ncol = 2)
 ```
+Pre-burned correlation: 0.091
+Post-burned correlation:0.24
+Burned sites correlation: 0.087
+Unburned sites correlation: -0.031
 
+There are positive correlations for NDVI and NDSI between pre- and post-burn dates and burned sites, and a negative correlation for unburned sites. Based on the correlation values and plots, the correlations are not noticeably strong.
 
-## Question 4
-
-What month is the greenest month on average? 
-
-Based on the NDVI, the greenest month on average is August. 
-```{r, message=F}
-ndvi_mean <- full_wide[c("ndvi", "month")] %>%
-  group_by(month) %>%
-  summarize(ndvi_mean=mean(ndvi))
-
-ggplot(ndvi_mean, aes(x=month,y=ndvi_mean))+
-  geom_bar(stat="identity")+
-  labs(y="Average NDVI", x= "Month")
-```
-
-
-## Question 5
+### Question 5
 
 What month is the snowiest on average?
 
-Based on NDSI, the snowiest month on average is January.
-```{r, message=F}
+```{r, message=F, fig.cap = "Histogram looking at average NDSI for every month for the Hayman Fire burn area. Based on NDSI, the snowiest month on average is January."}
 ndsi_mean <- full_wide[c("ndsi", "month")] %>%
   group_by(month) %>%
   summarize(ndsi_mean=mean(ndsi))

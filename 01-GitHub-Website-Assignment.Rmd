@@ -19,7 +19,7 @@ library(xts)
 
 # GitHub Website Assignment
 
-This assignment required the creation of a GitHub website, with a focus on workflow and and aesthetics editing. The website link for the assignment can be accessed [here] (https://mikrichardson.github.io/1_rmarkdown_examples/).
+This assignment required the creation of a GitHub website, with a focus on workflow and and aesthetics editing. The website link for the assignment can be accessed [here](https://mikrichardson.github.io/1_rmarkdown_examples/).
 
 ## Site Description
 The Cache la Poudre River, commonly referred to as the Poudre River, makes up 126 miles of Colorado's 107,000 miles of [rivers](https://www.uncovercolorado.com/rivers-in-colorado/). **The Poudre River is Colorado's only designated "Wild & Scenic" River.** The [Wild and Scenic Rivers Act](https://www.fs.usda.gov/managing-land/wild-scenic-rivers) is national legislation that protects over 13,400 miles of rivers and streams. The river originates in Rocky Mountain National Park, flowing east through Fort Collins and eventually converging with the South Platte River near [Greeley](https://www.visitftcollins.com/things-to-do/parks-open-spaces/cache-la-poudre-river/). The river corridor experiences *several diverse ecosystems* ranging from high alpine mountains to rolling plains. **The gauge site used for this analysis is located at the Lincoln Bridge in Fort Collins.**
@@ -40,7 +40,7 @@ The Poudre River site at Lincoln Bridge is:
 
 ### Data Acquisition and Plotting tests
 
-### Data Download
+#### Data Download
 
 
 ```{r downloader}
@@ -56,7 +56,7 @@ q <- readNWISdv(siteNumbers = '06752260',
 
 
 
-### Static Data Plotter
+#### Static Data Plotter
 
 
 ```{r, warning = FALSE, fig.width = 8, fig.height = 5}
@@ -69,7 +69,7 @@ ggplot(q, aes(x = Date, y = q)) +
 ```
 
 
-### Interactive Data Plotter
+#### Interactive Data Plotter
 
 
 ```{r}
